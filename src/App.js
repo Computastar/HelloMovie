@@ -1,5 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
+import Trailer_Player from './components/trailer-player/trailer-player';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           Learn React
         </a>
       </header>
+      <Trailer_Player videoURL={'ron burgundy'}/> 
     </div>
   );
 }
