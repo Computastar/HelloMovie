@@ -20,7 +20,7 @@ function getUserRegion() {
                 case 'FR':
                   region = 'fr';
                   break;
-                // Add more cases for other countries if needed
+                // Add up to 60 cases for all availabile regions
                 default:
                   region = 'us';
                   break;
