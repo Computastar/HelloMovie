@@ -1,6 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
-import GetUserLocation from './services/User-Location/user-location';
+import publicIP from './services/User-Location/user-location';
 
 function App() {
   return (
@@ -18,8 +18,9 @@ function App() {
         >
           Learn React
         </a>
+        <publicIP/>
       </header>
-      <GetUserLocation />
+    
     </div>
   );
 }
