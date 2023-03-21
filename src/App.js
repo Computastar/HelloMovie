@@ -1,3 +1,4 @@
+// Importing the Main component from './sections/Main/Main'
 import Main from './sections/Main/Main';
 // import { Route, Routes } from 'react-router-dom';
 

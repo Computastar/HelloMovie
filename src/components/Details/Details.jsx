@@ -1,3 +1,4 @@
+// Importing necessary components and libraries for the application
 import { MDBCol } from 'mdb-react-ui-kit';
 import axios from 'axios';
 import apikey from '../Recommendations/apikey';
@@ -5,13 +6,17 @@ import { useEffect, useState } from 'react';
 import { MDBContainer, MDBRow } from 'mdb-react-ui-kit';
 import Recommendations from '../Recommendations/Recommendations';
 
+// Creating and exporting a default function component called Details that accepts a props object
 export default function Details(props) {
+    // Using the useState hook to set initial state values
     const [data, setData] = useState('');
     const [id, setId] = useState(props.id);
+    // Using the useState hook to set initial state values
     useEffect(() => {
         getDetails();
     }, [data]);
-
+     
+    // Defining an async function called getDetails that fetches details about a movie using the IMDb API
     async function getDetails() {
         try {
             const response = await axios.get(
@@ -35,6 +40,7 @@ export default function Details(props) {
             console.log(error);
         }
     }
+    // Conditional rendering to display a trailer
     let trailer;
     if (data.trailer === null) {
         trailer = (
