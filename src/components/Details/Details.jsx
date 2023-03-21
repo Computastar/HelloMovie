@@ -1,15 +1,16 @@
 // Importing necessary components and libraries for the application
 import { MDBCol } from 'mdb-react-ui-kit';
 import axios from 'axios';
-import apikey from '../Recommendations/apikey';
+import imdbApikey from '../Recommendations/apikey';
 import { useEffect, useState } from 'react';
 import { MDBContainer, MDBRow } from 'mdb-react-ui-kit';
 import Recommendations from '../Recommendations/Recommendations';
+import getStreamingInfo from '../WatchInfo/Watchinfo'; 
 
 // Creating and exporting a default function component called Details that accepts a props object
 export default function Details(props) {
     // Using the useState hook to set initial state values
-    const [data, setData] = useState('');
+    const [data, ] = useState('');
     const [id, setId] = useState(props.id);
     // Using the useState hook to set initial state values
     useEffect(() => {
@@ -17,29 +18,34 @@ export default function Details(props) {
     }, [data]);
      
     // Defining an async function called getDetails that fetches details about a movie using the IMDb API
-    async function getDetails() {
+    const getDetails = async (imdbId) => {
         try {
-            const response = await axios.get(
-                `https://imdb-api.com/en/API/Title/${apikey}/${id}/FullActor,FullCast,Posters,Images,Trailer,Ratings`
-            );
-            const details = {
-                title: response.data.title,
-                year: response.data.year,
-                type: response.data.type,
-                image: response.data.image,
-                plot: response.data.plot,
-                trailer: response.data.trailer.linkEmbed,
-                runTime: response.data.runtimeStr,
-                stars: response.data.stars,
-                contentRating: response.data.contentRating,
-                rating: response.data.imDbRating,
-            };
-
-            setData(details);
+          const response = await axios.get(`https://imdb-api.com/en/API/Title/${imdbApikey}/${imdbId}`);
+      
+          // Extract the relevant details from the response and return them as an object
+          const details = {
+            title: response.data.title,
+            year: response.data.year,
+            rating: response.data.imDbRating,
+            genres: response.data.genres.split(','),
+            plot: response.data.plot,
+            directors: response.data.directors.split(','),
+            cast: response.data.stars.split(','),
+            poster: response.data.image,
+            watchLinks: await getStreamingInfo(imdbId, 'us')
+          };
+      
+          return details;
         } catch (error) {
-            console.log(error);
+          // If an error occurs, log it to the console and return null
+          console.error(error);
+          return null;
         }
-    }
+      };
+
+      console.log("data:", data);
+
+      
     // Conditional rendering to display a trailer
     let trailer;
     if (data.trailer === null) {
