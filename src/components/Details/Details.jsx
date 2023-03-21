@@ -22,6 +22,9 @@ export default function Details(props) {
         try {
           const response = await axios.get(`https://imdb-api.com/en/API/Title/${imdbApikey}/${imdbId}`);
       
+          // Log the response data to the console
+          console.log('Response data:', response.data);
+      
           // Extract the relevant details from the response and return them as an object
           const details = {
             title: response.data.title,
@@ -42,8 +45,7 @@ export default function Details(props) {
           return null;
         }
       };
-
-      console.log("data:", data);
+      
 
       
     // Conditional rendering to display a trailer
