@@ -1,7 +1,7 @@
 // Importing necessary components and libraries for the application
 import { MDBCol } from 'mdb-react-ui-kit';
 import axios from 'axios';
-import imdbApikey from '../Recommendations/apikey';
+import omdbApiKey from '../Recommendations/apikey';
 import { useEffect, useState } from 'react';
 import { MDBContainer, MDBRow } from 'mdb-react-ui-kit';
 import Recommendations from '../Recommendations/Recommendations';
@@ -10,54 +10,42 @@ import getWatchInfo from '../WatchInfo/Watchinfo';
 // Creating and exporting a default function component called Details that accepts a props object
 export default function Details(props) {
     // Using the useState hook to set initial state values
-    const [data,setData ] = useState('');
+    const [data, setData] = useState({});
     const [id, setId] = useState(props.id);
-    // Using the useState hook to set initial state values
+    
+    // Using the useEffect hook to fetch movie details from OMDB API
     useEffect(() => {
-        getDetails(id);
-    }, [id]);
-     
-    // Defining an async function called getDetails that fetches details about a movie using the IMDb API
-    const getDetails = async (imdbId) => {
-        try {
-          const response = await axios.get(`http://www.omdbapi.com/?s=${imdbId}&apikey=${imdbApikey}`); 
-      
-          // Log the response data to the console
-          console.log('Response data:', response.data);
-        
+        const getDetails = async () => {
+            try {
+                const response = await axios.get(`http://www.omdbapi.com/?i=${id}&apikey=${omdbApiKey}`);
 
-          // Extract the relevant details from the response and return them as an object
-          const details = {
-            title: response.data.title,
-            year: response.data.year,
-            rating: response.data.imDbRating,
-            genres: response.data.genres.split(','),
-            plot: response.data.plot,
-            directors: response.data.directors.split(','),
-            cast: response.data.stars.split(','),
-            poster: response.data.image,
-            watchLinks: await getWatchInfo(imdbId, 'us')
-          };
-        
-          console.log('Details:',details);
-
-          setData(JSON.stringify(details));
-          return details;
-        } catch (error) {
-          // If an error occurs, log it to the console and return null
-          console.error(error);
-          return null;
+                // Extract the relevant details from the response and return them as an object
+                const details = {
+                    title: response.data.Title,
+                    year: response.data.Year,
+                    rating: response.data.imdbRating,
+                    genres: response.data.Genre.split(', '),
+                    plot: response.data.Plot,
+                    directors: response.data.Director.split(', '),
+                    cast: response.data.Actors.split(', '),
+                    poster: response.data.Poster,
+                    watchLinks: await getWatchInfo(id, 'us')
+                };
+                setData(details);
+            } catch (error) {
+                // If an error occurs, log it to the console and return null
+                console.error(error);
+            }
         }
-      };
-      
+        getDetails();
+    }, [id]);
       
     // Conditional rendering to display a trailer
     let trailer;
-    if (data.trailer === null) {
+    if (!data.watchLinks || data.watchLinks.length === 0) {
         trailer = (
             <p className='fs-1 warning text-center'>Trailer not available</p>
         );
-    } else {
         trailer = (
             <iframe
                 src={data.trailer}
