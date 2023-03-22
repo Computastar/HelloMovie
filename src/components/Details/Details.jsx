@@ -1,56 +1,51 @@
+// Importing necessary components and libraries for the application
 import { MDBCol } from 'mdb-react-ui-kit';
 import axios from 'axios';
-import apikey from '../../apikeys';
+import omdbApiKey from '../Recommendations/apikey';
 import { useEffect, useState } from 'react';
 import { MDBContainer, MDBRow } from 'mdb-react-ui-kit';
-import AOS from 'aos';
-import 'aos/dist/aos.css';
-import getWatchInfo from '../WatchInfo/Watchinfo';
+import Recommendations from '../Recommendations/Recommendations';
+import getWatchInfo from '../WatchInfo/Watchinfo'; 
 
-
+// Creating and exporting a default function component called Details that accepts a props object
 export default function Details(props) {
-    const [data, setData] = useState('');
-
+    // Using the useState hook to set initial state values
+    const [data, setData] = useState({});
+    const [id, setId] = useState(props.id);
+    
+    // Using the useEffect hook to fetch movie details from OMDB API
     useEffect(() => {
-        AOS.init({
-            duration: 2000,
-        });
-    }, [props.searchId, props.mostPopId]);
+        const getDetails = async () => {
+            try {
+                const response = await axios.get(`http://www.omdbapi.com/?i=${id}&apikey=${omdbApiKey}`);
 
-    useEffect(() => {
-        getDetails(props.searchId || props.mostPopId);
-    }, [props.searchId, props.mostPopId]);
-
-    async function getDetails(id) {
-        try {
-            const response = await axios.get(
-                `https://imdb-api.com/en/API/Title/${apikey}/${id}/FullActor,FullCast,Posters,Images,Trailer,Ratings`
-            );
-            const details = {
-                title: response.data.title,
-                year: response.data.year,
-                type: response.data.type,
-                image: response.data.image,
-                plot: response.data.plot,
-                trailer: response.data.trailer.linkEmbed,
-                runTime: response.data.runtimeStr,
-                stars: response.data.stars,
-                contentRating: response.data.contentRating,
-                rating: response.data.imDbRating,
-                watchLinks: await getWatchInfo()
-            };
-
-            setData(details);
-        } catch (error) {
-            console.log(error);
+                // Extract the relevant details from the response and return them as an object
+                const details = {
+                    title: response.data.Title,
+                    year: response.data.Year,
+                    rating: response.data.imdbRating,
+                    genres: response.data.Genre.split(', '),
+                    plot: response.data.Plot,
+                    directors: response.data.Director.split(', '),
+                    cast: response.data.Actors.split(', '),
+                    poster: response.data.Poster,
+                    watchLinks: await getWatchInfo(id, 'us')
+                };
+                setData(details);
+            } catch (error) {
+                // If an error occurs, log it to the console and return null
+                console.error(error);
+            }
         }
-    }
+        getDetails();
+    }, [id]);
+      
+    // Conditional rendering to display a trailer
     let trailer;
-    if (data.trailer === null) {
+    if (!data.watchLinks || data.watchLinks.length === 0) {
         trailer = (
             <p className='fs-1 warning text-center'>Trailer not available</p>
         );
-    } else {
         trailer = (
             <iframe
                 src={data.trailer}
@@ -63,7 +58,7 @@ export default function Details(props) {
     return (
         <>
             <section className='py-5 px-2 bg-black bg-gradient'>
-                <MDBContainer data-aos='zoom-in'>
+                <MDBContainer>
                     <MDBRow>
                         <h2 className='componentTitle text-center'>
                             {data.title}
@@ -118,7 +113,7 @@ export default function Details(props) {
                     </MDBRow>
                 </MDBContainer>
             </section>
-            {/* <Recommendations id={id} setId={setId} /> */}
+            <Recommendations id={id} setId={setId} />
         </>
     );
 }
