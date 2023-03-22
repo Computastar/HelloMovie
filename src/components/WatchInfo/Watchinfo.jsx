@@ -14,14 +14,16 @@ const getWatchInfo = async (imdbId) => {
       },
     });
 
-    // Extract the watch links from the response using the provided path
-    const watchLinks = response.data.result.streamingInfo.us.apple.map(info => info.link);
+    // Extract the watch links and price information for the 'apple' provider
+    const appleWatchLinks = response.data.result.streamingInfo.us.apple.map(info => info.link);
+    const applePrice = response.data.result.streamingInfo.us.apple[0].price;
 
-    // Extract the price information from the response
-    const price = response.data.result.streamingInfo.us.apple[0].price;
+    // Extract the watch links and price information for the 'prime' provider
+    const primeWatchLinks = response.data.result.streamingInfo.us.prime.map(info => info.link);
+    const primePrice = response.data.result.streamingInfo.us.prime[0].price;
 
-    // Create an object with the watch links and price information
-    const result = { watchLinks, price };
+    // Create an object with the watch links and price information for both providers
+    const result = { apple: { watchLinks: appleWatchLinks, price: applePrice }, prime: { watchLinks: primeWatchLinks, price: primePrice } };
     return result;
   } catch (error) {
     console.error(error);
