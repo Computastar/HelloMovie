@@ -12,7 +12,7 @@ import {
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import Details from '../Details/Details';
-import getStreamingInfo from '../WatchInfo/Watchinfo';
+import getWatchinfo from '../WatchInfo/Watchinfo';
 
 const Search = (props) => {
     const [data, setData] = useState('');
@@ -39,7 +39,7 @@ const Search = (props) => {
 
     useEffect(() => {
         if (id) {
-            getStreamingInfo(id, 'us');
+            getWatchinfo(id, 'us');
         }
     }, [id]);
 

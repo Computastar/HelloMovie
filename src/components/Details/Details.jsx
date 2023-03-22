@@ -5,26 +5,27 @@ import imdbApikey from '../Recommendations/apikey';
 import { useEffect, useState } from 'react';
 import { MDBContainer, MDBRow } from 'mdb-react-ui-kit';
 import Recommendations from '../Recommendations/Recommendations';
-import getStreamingInfo from '../WatchInfo/Watchinfo'; 
+import getWatchInfo from '../WatchInfo/Watchinfo'; 
 
 // Creating and exporting a default function component called Details that accepts a props object
 export default function Details(props) {
     // Using the useState hook to set initial state values
-    const [data, ] = useState('');
+    const [data,setData ] = useState('');
     const [id, setId] = useState(props.id);
     // Using the useState hook to set initial state values
     useEffect(() => {
-        getDetails();
-    }, [data]);
+        getDetails(id);
+    }, [id]);
      
     // Defining an async function called getDetails that fetches details about a movie using the IMDb API
     const getDetails = async (imdbId) => {
         try {
-          const response = await axios.get(`https://imdb-api.com/en/API/Title/${imdbApikey}/${imdbId}`);
+          const response = await axios.get(`http://www.omdbapi.com/?s=${imdbId}&apikey=${imdbApikey}`); 
       
           // Log the response data to the console
           console.log('Response data:', response.data);
-      
+        
+
           // Extract the relevant details from the response and return them as an object
           const details = {
             title: response.data.title,
@@ -35,9 +36,12 @@ export default function Details(props) {
             directors: response.data.directors.split(','),
             cast: response.data.stars.split(','),
             poster: response.data.image,
-            watchLinks: await getStreamingInfo(imdbId, 'us')
+            watchLinks: await getWatchInfo(imdbId, 'us')
           };
-      
+        
+          console.log('Details:',details);
+
+          setData(JSON.stringify(details));
           return details;
         } catch (error) {
           // If an error occurs, log it to the console and return null
@@ -46,7 +50,6 @@ export default function Details(props) {
         }
       };
       
-
       
     // Conditional rendering to display a trailer
     let trailer;
