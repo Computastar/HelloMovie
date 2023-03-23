@@ -23,6 +23,9 @@ const Search = (props) => {
         props.setShowRecommendations(true);
         props.setShowDetails(true);
         props.setShowWatchMode(false);
+        setTimeout(() => {
+            document.querySelector('#details').scrollIntoView();
+        }, 1000);
         props.handleClose();
     }
 
