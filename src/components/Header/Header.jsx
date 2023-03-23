@@ -85,6 +85,7 @@ export default function Header(props) {
                 setSearchId={props.setSearchId}
                 setShowRecommendations={props.setShowRecommendations}
                 setShowDetails={props.setShowDetails}
+                setShowWatchMode={props.setShowWatchMode}
             />
         </header>
     );
