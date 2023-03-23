@@ -22,6 +22,7 @@ const Search = (props) => {
         props.setShowHero(false);
         props.setShowRecommendations(true);
         props.setShowDetails(true);
+        props.setShowWatchMode(false);
         props.handleClose();
     }
 

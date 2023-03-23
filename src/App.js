@@ -33,6 +33,7 @@ function App() {
                 searchId={searchId}
                 setShowRecommendations={setShowRecommendations}
                 setShowDetails={setShowDetails}
+                setShowWatchMode={setShowWatchMode}
             />
             {showHero ? (
                 <Hero setShowHero={setShowHero} setShowPop={setShowPop} />
