@@ -117,7 +117,7 @@ GitHub Public Repo
 
 https://github.com/Computastar/HelloMovie
 
-Netlify ite
+Netlify Site
 
 https://hellomovie.netlify.app
 
